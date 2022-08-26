@@ -1,7 +1,16 @@
 import React from 'react';
+import { GlobalStyle } from './GlobalStyles';
+import { ListOfCategories } from './components/ListOfCategories';
+import { ListOfPhotoCards } from './components/ListOfPhotoCards';
+import { Logo } from './components/Logo';
 
-const App = () => {
-  return <h1>Hola</h1>;
-};
+const App = () => (
+  <div className="App">
+    <GlobalStyle />
+    <Logo />
+    <ListOfCategories />
+    <ListOfPhotoCards />
+  </div>
+);
 
 export default App;
