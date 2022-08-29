@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PhotoCard } from '../PhotoCard';
 import json from '../../../api/api/db.json';
+import axios from 'axios';
 
 export const ListOfPhotoCards = () => {
+  const [photos, setPhotos] = useState(json.photos);
+  /*useEffect(() => {
+    const getPhotos = async () => {
+      await axios.get 
+    }
+  }, [])*/
   return (
     <ul>
-      {json.photos.map((photo) => (
-        <PhotoCard {...photo}/>
+      {photos.map((photo) => (
+        <PhotoCard key={photo.id} {...photo}/>
       ))}
     </ul>
   );
