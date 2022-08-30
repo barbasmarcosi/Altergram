@@ -1,33 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Article, ImgWrapper, Img, Button } from './styles';
-import { MdFavoriteBorder } from 'react-icons/md';
+import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
+import useLocalStorage from '../../hooks/useLocalStorage';
+import useIntersectionObserver from '../../hooks/useIntersectionObserver';
 
 export const PhotoCard = ({ id, likes = 0, src }) => {
   const ref = useRef(null);
-  const [show, setShow] = useState(false);
-  const [actualLikes, setActualLikes] = useState(likes);
-  const [liked, setLikes] = useState(false);
-  const onClickLike = () => {
-    liked ? setActualLikes(actualLikes - 1) : setActualLikes(actualLikes + 1);
-    setLikes(!liked);
-  };
+  const key = `like-${id}`;
+  const [liked, setLiked] = useLocalStorage(key, false);
+  const [show, setShow] = useIntersectionObserver(ref, false);
+  const [actualLikes, setActualLikes] = useState(liked ? likes + 1 : likes);
+  const Icon = liked ? MdFavorite : MdFavoriteBorder;
 
-  useEffect(() => {
-    Promise.resolve(
-      typeof window.IntersectionObserver !== 'undefined'
-        ? window.IntersectionObserver
-        : import('intersection-observer')
-    ).then(() => {
-      const observer = new window.IntersectionObserver((entries) => {
-        const { isIntersecting } = entries[0];
-        if (isIntersecting) {
-          setShow(true);
-          observer.disconnect();
-        }
-      });
-      observer.observe(ref.current);
-    });
-  }, [ref]);
+  const handleLikeButton = (value) => {
+    setActualLikes(value ? actualLikes + 1 : actualLikes - 1);
+    setLiked(value);
+  };
 
   return (
     <Article ref={ref}>
@@ -38,13 +26,9 @@ export const PhotoCard = ({ id, likes = 0, src }) => {
               <Img src={src} alt="image" />
             </ImgWrapper>
           </a>
-          <Button type="button">
-            <MdFavoriteBorder
-              fill={liked ? '#ec0d0d' : 'inherit'}
-              onClick={onClickLike}
-              size="32px"
-            />{' '}
-            {actualLikes} likes!
+          <Button type="button" onClick={() => handleLikeButton(!liked)}>
+            <Icon size="32px" color={liked ? 'crimson' : ''} /> {actualLikes}{' '}
+            likes!
           </Button>
         </>
       )}

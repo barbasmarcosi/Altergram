@@ -13,7 +13,7 @@ export const ListOfPhotoCards = () => {
   return (
     <ul>
       {photos.map((photo) => (
-        <PhotoCard key={photo.id} {...photo}/>
+        <PhotoCard key={photo.id} id={photo.id} {...photo}/>
       ))}
     </ul>
   );
